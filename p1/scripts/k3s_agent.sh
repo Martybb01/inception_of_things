@@ -1,12 +1,26 @@
 #!/bin/bash
 MASTER_IP=$1
 
-while [ ! -f /vagrant/token ]; do
-  echo "Waiting for master token..."
-  sleep 2
+TIMEOUT=300
+ELAPSED=0
+while [ ! -f /vagrant/token ] && [ $ELAPSED -lt $TIMEOUT ]; do
+  echo "Waiting for master token... ($ELAPSED/$TIMEOUT seconds)"
+  sleep 5
+  ELAPSED=$((ELAPSED + 5))
 done
 
+if [ ! -f /vagrant/token ]; then
+  echo "Timeout waiting for master token"
+  exit 1
+fi
+
 K3S_TOKEN=$(cat /vagrant/token)
+echo "Token found, connecting to master at $MASTER_IP"
+
+if ! nc -z $MASTER_IP 6443; then
+  echo "Cannot reach master at $MASTER_IP:6443"
+  exit 1
+fi
 
 IFACE=$(ip -4 addr show | grep "192.168.56.111" | awk '{print $NF}')
 

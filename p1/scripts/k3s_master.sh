@@ -15,5 +15,11 @@ sudo cp /etc/rancher/k3s/k3s.yaml /home/vagrant/.kube/config
 sudo sed -i 's/127.0.0.1/192.168.56.110/g' /home/vagrant/.kube/config
 sudo chown -R vagrant:vagrant /home/vagrant/.kube
 
+while ! sudo k3s kubectl get nodes >/dev/null 2>&1; do
+  echo "Waiting for k3s server to be ready..."
+  sleep 5
+done
+
 K3S_TOKEN=$(sudo cat /var/lib/rancher/k3s/server/node-token)
 echo $K3S_TOKEN > /vagrant/token
+echo "K3s server ready, token saved"
