@@ -1,0 +1,27 @@
+#!/bin/bash
+
+IFACE=$(ip -4 addr show | grep "192.168.56.110" | awk '{print $NF}')
+
+if [ -z "$IFACE" ]; then
+  echo "Interface with IP 192.168.56.110 not found, using default"
+  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --node-ip=192.168.56.110 --write-kubeconfig-mode=644" sh -
+else
+  echo "Using interface: $IFACE"
+  curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --node-ip=192.168.56.110 --flannel-iface=$IFACE --write-kubeconfig-mode=644" sh -
+fi
+
+sudo mkdir -p /home/vagrant/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml /home/vagrant/.kube/config
+sudo sed -i 's/127.0.0.1/192.168.56.110/g' /home/vagrant/.kube/config
+sudo chown -R vagrant:vagrant /home/vagrant/.kube
+
+echo "Creating apps namespace and switch to it..."
+kubectl create namespace apps
+sudo kubectl config set-context --current --namespace=apps
+
+echo "Deploying applications and ingress..."
+kubectl apply -f /vagrant/confs/app1.yaml
+kubectl apply -f /vagrant/confs/app2.yaml
+kubectl apply -f /vagrant/confs/app3.yaml
+# kubectl apply -f /vagrant/confs/ingress.yaml -n apps
+echo "Done!"
