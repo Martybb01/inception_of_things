@@ -23,5 +23,5 @@ echo "Deploying applications and ingress..."
 kubectl apply -f /vagrant/confs/app1.yaml
 kubectl apply -f /vagrant/confs/app2.yaml
 kubectl apply -f /vagrant/confs/app3.yaml
-# kubectl apply -f /vagrant/confs/ingress.yaml -n apps
+kubectl apply -f /vagrant/confs/ingress.yaml
 echo "Done!"
