@@ -2,12 +2,15 @@
 # Inception of Things
 
 A hands-on exploration of Kubernetes infrastructure using K3s, K3d, Vagrant, and GitOps.
+This repository contains three progressive projects that demonstrate **Kubernetes cluster setup, application deployment, and continuous deployment.**
 
-## Overview
+### Requirements
 
-This repository contains three progressive projects that demonstrate Kubernetes cluster setup, application deployment, and continuous deployment.
+- Vagrant
+- VirtualBox
+- 2GB+ available RAM
 
-### P1: K3s and Vagrant
+## P1: K3s and Vagrant
 
 Sets up a multi-node Kubernetes cluster from scratch using K3s and Vagrant. This project involves:
 - Creating two VMs with static IPs on a private network
@@ -26,7 +29,7 @@ vagrant ssh marboccuS  # or vagrant ssh marboccuSW
 kubectl get nodes -o wide
 ```
 
-### P2: K3s and Three Simple Applications
+## P2: K3s and Three Simple Applications
 
 Deploys three web applications on a single-node K3s cluster with ingress routing. This project involves:
 - Single-node K3s cluster setup
@@ -55,14 +58,6 @@ curl 192.168.56.110  # app3 (default)
 
 All applications use the same Flask container image (`marboccu/flask-app:18`) but are routed differently based on the hostname.
 
-### P3: K3d and Argo CD
+## P3: K3d and Argo CD
 
 Coming soon - GitOps continuous deployment with K3d and Argo CD.
-
----
-
-## Requirements
-
-- Vagrant
-- VirtualBox
-- 2GB+ available RAM
