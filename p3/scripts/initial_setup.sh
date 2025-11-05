@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 sudo usermod -aG docker $USER
-
+ 
 
 echo "Installing kubectl..."
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -28,5 +28,6 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 echo "Installing k3d..."
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
-echo "Setup completed successfully, wait for step 2..."
+echo "Initial setup completed successfully, now another script will handle K3D and ArgoCD setup..."
+./cluster_setup.sh
 
