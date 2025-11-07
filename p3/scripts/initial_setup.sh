@@ -19,15 +19,27 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
 sudo usermod -aG docker $USER
- 
+
 
 echo "Installing kubectl..."
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+ARCH=$(uname -m)
+if [ "$ARCH" = "x86_64" ] || [ "$ARCH" = "amd64" ]; then
+    echo "Detected amd64 architecture"
+    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+    echo "Detected arm64 architecture"
+    curl -LO "https://dl.k8s.io/release/v1.33.0/bin/linux/arm64/kubectl"
+else
+    echo "Unsupported architecture: $ARCH"
+    exit 1
+fi
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+rm kubectl 
 
 echo "Installing k3d..."
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
-echo "Initial setup completed successfully, now another script will handle K3D and ArgoCD setup..."
-./cluster_setup.sh
+echo "Initial setup completed successfully, now ./cluster_setup.sh script will handle K3D and ArgoCD setup..."
+
+newgrp docker
 
