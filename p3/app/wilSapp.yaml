@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wilS_playground
+  name: wil_playground
   namespace: dev
 spec:
   type: NodePort
@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wilS_playground
+  name: wil_playground
   namespace: dev
 spec:
   selector:
@@ -28,7 +28,7 @@ spec:
         app: wilS_playground
     spec:
       containers:
-      - name: wilS_playground_container
+      - name: wil_playground_container
         image: wil42/playground:v1
         resources:
           limits:
