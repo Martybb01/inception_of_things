@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# x ora senza prima fare newgrp docker sto script non funziona perchè ha bisogno di sudo
-
 echo "Creating K3d cluster..."
 if k3d cluster list | grep -q "marboccuCluster"; then
     echo "Cluster 'marboccuCluster' already exists, skipping creation..."

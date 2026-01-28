@@ -60,4 +60,46 @@ All applications use the same Flask container image (`marboccu/flask-app:18`) bu
 
 ## P3: K3d and Argo CD
 
-Coming soon - GitOps continuous deployment with K3d and Argo CD.
+Implements GitOps continuous deployment using K3d and ArgoCD. This project involves:
+- Local K3d cluster creation with port mapping
+- ArgoCD installation and configuration
+- Automated application deployment from Git repository
+- Continuous sync with auto-prune and self-healing
+- Version management through container image tags
+
+The setup demonstrates how ArgoCD monitors a Git repository and automatically deploys changes to the cluster, enabling true GitOps workflows.
+
+The application uses `wil42/playground` container image with NodePort service on port 30420, exposed via k3d on localhost:8888.
+
+**Setup:**
+```bash
+cd p3/scripts
+./initial_setup.sh
+./cluster_setup.sh
+./deploy.sh
+```
+
+**Access ArgoCD UI:**
+```bash
+# From your local machine, create SSH tunnel to the VM after creating ssh key:
+ssh -i ~/.ssh/id_ed25519 -L 8081:localhost:8080 <hostname>@<VM_IP>
+
+# Then visit: https://localhost:8081
+# Username: admin
+# Password: (shown during cluster_setup.sh execution)
+```
+
+**Access the deployed application:**
+```bash
+# From VM:
+curl http://localhost:8888
+
+# From your Mac visit:
+curl http://<VM_IP>:8888
+```
+
+**Test GitOps - Verify automatic version updates:**
+1. Edit the image tag in `p3/app/wilSapp.yaml` (e.g., change `v1` to `v2`)
+2. Commit and push the change to Git
+3. ArgoCD will automatically detect the change and sync the new version
+4. Verify the update in ArgoCD UI or with: `argocd app get wil-playground`
