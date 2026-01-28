@@ -24,4 +24,3 @@ echo "Check status with: argocd app get wil-playground"
 
 argocd app get wil-playground
 
-kubectl port-forward -n dev svc/wilS-playground 8888:8888

@@ -6,7 +6,7 @@ echo "Creating K3d cluster..."
 if k3d cluster list | grep -q "marboccuCluster"; then
     echo "Cluster 'marboccuCluster' already exists, skipping creation..."
 else
-    k3d cluster create marboccuCluster -p 8888:42000
+    k3d cluster create marboccuCluster -p 8888:30420
     echo "Cluster 'marboccuCluster' created successfully."
 fi
 
