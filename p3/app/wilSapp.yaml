@@ -1,34 +1,34 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: wilS-playground
+  name: wilS_playground
   namespace: dev
 spec:
   type: NodePort
   selector:
-    app: wilS-playground
+    app: wilS_playground
   ports:
   - port: 8888
     targetPort: 8888
-    nodePort: 42000
+    nodePort: 30420
     protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wilS-playground
+  name: wilS_playground
   namespace: dev
 spec:
   selector:
     matchLabels:
-      app: wilS-playground
+      app: wilS_playground
   template:
     metadata:
       labels:
-        app: wilS-playground
+        app: wilS_playground
     spec:
       containers:
-      - name: wilS-playground-container
+      - name: wilS_playground_container
         image: wil42/playground:v1
         resources:
           limits:
