@@ -24,14 +24,14 @@ until nc -z $MASTER_IP 6443 2>/dev/null; do
 done
 echo "Master API server is ready"
 
-IFACE=$(ip -4 addr show | grep "192.168.100.111" | awk '{print $NF}')
+IFACE=$(ip -4 addr show | grep "192.168.56.111" | awk '{print $NF}')
 
 if [ -z "$IFACE" ]; then
-  echo "Interface with IP 192.168.100.111 not found, using default"
-  curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$K3S_TOKEN INSTALL_K3S_EXEC="agent --node-ip=192.168.100.111" sh -
+  echo "Interface with IP 192.168.56.111 not found, using default"
+  curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$K3S_TOKEN INSTALL_K3S_EXEC="agent --node-ip=192.168.56.111" sh -
 else
   echo "Using interface: $IFACE"
-  curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$K3S_TOKEN INSTALL_K3S_EXEC="agent --node-ip=192.168.100.111 --flannel-iface=$IFACE" sh -
+  curl -sfL https://get.k3s.io | K3S_URL=https://$MASTER_IP:6443 K3S_TOKEN=$K3S_TOKEN INSTALL_K3S_EXEC="agent --node-ip=192.168.56.111 --flannel-iface=$IFACE" sh -
 fi
 
 sudo mkdir -p /home/vagrant/.kube
