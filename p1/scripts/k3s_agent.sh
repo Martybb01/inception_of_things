@@ -17,6 +17,13 @@ fi
 K3S_TOKEN=$(cat /vagrant/token)
 echo "Token found, connecting to master at $MASTER_IP"
 
+echo "Waiting for master API server on port 6443..."
+until nc -z $MASTER_IP 6443 2>/dev/null; do
+  sleep 5
+  echo "Still waiting for $MASTER_IP:6443..."
+done
+echo "Master API server is ready"
+
 IFACE=$(ip -4 addr show | grep "192.168.56.111" | awk '{print $NF}')
 
 if [ -z "$IFACE" ]; then
