@@ -1,0 +1,16 @@
+Nella VM:
+- sudo apt update && sudo apt install vagrant curl -y
+
+sudo apt install -y libvirt-dev libvirt-daemon-system ruby-dev build-essential
+
+vagrant plugin install vagrant-libvirt
+
+sudo usermod -aG libvirt $(whoami)
+sudo usermod -aG kvm $(whoami)
+newgrp libvirt
+sudo systemctl enable --now libvirtd
+
+sudo chmod 660 /var/run/libvirt/libvirt-sock
+sudo chown marboccu:libvirt /var/run/libvirt/libvirt-sock
+
+vagrant up --provider=libvirt 
