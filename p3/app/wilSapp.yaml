@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: wil-playground-container
-        image: wil42/playground:v1
+        image: wil42/playground:v2
         resources:
           limits:
             memory: "128Mi"
