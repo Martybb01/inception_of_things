@@ -80,8 +80,8 @@ cd p3/scripts
 ./cluster_setup.sh   # k3d + Argo CD + Application (p3/confs/application.yaml)
 ```
 
-Argo CD watches the public repo https://github.com/emptydeepblue/marboccu-iot (`deployment.yaml` at its root).
-A copy of the manifest is kept in `p3/confs/app/deployment.yaml`.
+`p1`, `p2` and `p3` are also pushed to the public repo https://github.com/emptydeepblue/marboccu-iot (login in the name, as required).
+Argo CD watches its `p3/confs/app/` folder (`deployment.yaml`).
 
 **Access ArgoCD UI:**
 ```bash
@@ -102,7 +102,7 @@ curl http://<VM_IP>:8888
 ```
 
 **Test GitOps - Verify automatic version updates:**
-1. Edit the image tag in `deployment.yaml` of the `marboccu-iot` repo (e.g., change `v1` to `v2`)
+1. Edit the image tag in `p3/confs/app/deployment.yaml` of the `marboccu-iot` repo (e.g., change `v1` to `v2`)
 2. Commit and push the change to Git
 3. ArgoCD will automatically detect the change and sync the new version
 4. Verify the update in ArgoCD UI or with: `argocd app get wil-playground` (`--refresh` to force an immediate check, Argo CD polls Git every ~3 minutes)
@@ -143,7 +143,7 @@ curl http://<VM_IP>:8888
 - Demo:
   ```bash
   git clone git@github.com:emptydeepblue/marboccu-iot.git && cd marboccu-iot
-  sed -i 's/wil42\/playground:v1/wil42\/playground:v2/' deployment.yaml
+  sed -i 's/wil42\/playground:v1/wil42\/playground:v2/' p3/confs/app/deployment.yaml
   git commit -am "v2" && git push
   argocd app get wil-playground --refresh
   kubectl get pods -n dev

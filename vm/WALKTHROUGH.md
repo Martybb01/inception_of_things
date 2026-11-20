@@ -46,7 +46,7 @@ UI Argo CD: dal browser del PC → **https://localhost:8080** (admin / password 
 Demo v2 (push **dal PC**, lì c'è la chiave GitHub):
 ```bash
 cd ~/RNCP7/github/marboccu-iot && git pull
-sed -i 's/playground:v1/playground:v2/' deployment.yaml && git commit -am v2 && git push
+sed -i 's/playground:v1/playground:v2/' p3/confs/app/deployment.yaml && git commit -am v2 && git push
 ```
 Nella VM:
 ```bash
