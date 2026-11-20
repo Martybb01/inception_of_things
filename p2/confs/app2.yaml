@@ -30,6 +30,9 @@ spec:
       containers:
         - name: kube-app2
           image: marboccu/flask-app:18
+          env:
+          - name: APP_VERSION
+            value: app2
           resources:
             limits:
               memory: "128Mi"

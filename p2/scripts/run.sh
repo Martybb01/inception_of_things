@@ -1,5 +1,8 @@
 #!/bin/bash
 
+sudo systemctl disable --now firewalld
+export PATH=$PATH:/usr/local/bin
+
 IFACE=$(ip -4 addr show | grep "192.168.56.110" | awk '{print $NF}')
 
 if [ -z "$IFACE" ]; then
@@ -17,7 +20,7 @@ sudo chown -R vagrant:vagrant /home/vagrant/.kube
 
 echo "Creating apps namespace and switch to it..."
 kubectl create namespace apps
-sudo kubectl config set-context --current --namespace=apps
+kubectl config set-context --current --namespace=apps
 
 echo "Deploying applications and ingress..."
 kubectl apply -f /vagrant/confs/app1.yaml

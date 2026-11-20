@@ -13,7 +13,7 @@ kubectl create namespace argocd
 kubectl create namespace dev
 
 echo "Installing ArgoCD..."
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 echo "Waiting for ArgoCD to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
@@ -48,5 +48,11 @@ echo "In order to access UI visit https://localhost:8080"
 # ssh -i ~/.ssh/id_ed25519 -L 8081:localhost:8080 ubuntu@<ip> --> x vedere da macchina host + aggiungere la chiave pubblica .pub a authorized keys dentro .ssh su VM
 # sull'host girerà sulla porta 8081 e non 8080
 
-echo "Now it's time to step 3..."
+echo "Deploying wilSapp with ArgoCD Application (repo: github.com/emptydeepblue/marboccu-iot)..."
+kubectl apply -f "$(dirname "$0")/../confs/application.yaml"
+
+echo "Waiting for the application to be deployed in dev namespace..."
+until kubectl -n dev get deployment wil-playground >/dev/null 2>&1; do sleep 5; done
+kubectl -n dev rollout status deployment/wil-playground --timeout=300s
+echo "Application deployed! Test with: curl http://localhost:8888"
 
