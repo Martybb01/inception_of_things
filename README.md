@@ -150,3 +150,8 @@ curl http://<VM_IP>:8888
   kubectl get pods -n dev
   curl http://localhost:8888/     # {"status":"ok", "message": "v2"}
   ```
+
+## Host VM setup (`vm/`)
+
+`vm/scripts/create_vm.sh` (run on the host, no sudo) creates the KVM/QEMU VM `iot` used for the whole project,
+`vm/scripts/setup_vm.sh` (run inside it) installs Vagrant + libvirt. Step-by-step defense guide: `vm/WALKTHROUGH.md`.
