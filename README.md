@@ -85,10 +85,9 @@ A copy of the manifest is kept in `p3/confs/app/deployment.yaml`.
 
 **Access ArgoCD UI:**
 ```bash
-# From your local machine, create SSH tunnel to the VM after creating ssh key:
-ssh -i ~/.ssh/id_ed25519 -L 8081:localhost:8080 <hostname>@<VM_IP>
-
-# Then visit: https://localhost:8081
+# cluster_setup.sh runs `kubectl port-forward --address 0.0.0.0 ... 8080:443` inside the VM,
+# and the VM forwards port 8080 to the host: no SSH tunnel / key needed.
+# From the host visit: https://localhost:8080
 # Username: admin
 # Password: (shown during cluster_setup.sh execution)
 ```

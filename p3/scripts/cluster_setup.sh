@@ -18,7 +18,7 @@ kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubuse
 echo "Waiting for ArgoCD to be ready..."
 kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s
 
-nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 >> /dev/null 2>&1 &
+nohup kubectl port-forward --address 0.0.0.0 svc/argocd-server -n argocd 8080:443 >> /dev/null 2>&1 &
 
 sleep 10
 
@@ -45,8 +45,8 @@ argocd login localhost:8080 --insecure --username admin --password $(kubectl -n 
 echo "ArgoCD login successful."
 
 echo "In order to access UI visit https://localhost:8080"
-# ssh -i ~/.ssh/id_ed25519 -L 8081:localhost:8080 ubuntu@<ip> --> x vedere da macchina host + aggiungere la chiave pubblica .pub a authorized keys dentro .ssh su VM
-# sull'host girerà sulla porta 8081 e non 8080
+# port-forward listens on all the VM interfaces (--address 0.0.0.0): the host reaches the UI
+# through the VM port forward 8080 -> https://localhost:8080 on the host, no SSH tunnel/key needed
 
 echo "Deploying wilSapp with ArgoCD Application (repo: github.com/emptydeepblue/marboccu-iot)..."
 kubectl apply -f "$(dirname "$0")/../confs/application.yaml"

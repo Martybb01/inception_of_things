@@ -33,8 +33,7 @@ VM "iot" (Ubuntu 24.04, 8 CPU, 8 GB, utente everonel / password everonel, sudo s
 └── /var/lib/libvirt/images/                ← dischi delle VM di p1/p2 (marboccuS, marboccuSW)
 ```
 
-Porte dal PC verso la VM: `2222` → ssh, `8888` → app di p3, `8080` → libero (l'interfaccia di Argo CD
-passa dal tunnel `ssh -L 8081:localhost:8080 iot`, vedi P3).
+Porte dal PC verso la VM: `2222` → ssh, `8888` → app di p3, `8080` → interfaccia di Argo CD (p3).
 
 Se si parte da un **PC nuovo** (o dal PC di un compagno): clona il repo del progetto in qualsiasi cartella,
 poi segui la sezione 0 usando `vm/scripts/` del repo. Per fare la demo v2 serve una chiave SSH autorizzata
@@ -171,12 +170,10 @@ curl http://localhost:8888/           # {"status":"ok", "message": "v1"}
 argocd app get wil-playground         # Repo: github.com/emptydeepblue/marboccu-iot, Synced, Healthy
 ```
 
-**Interfaccia di Argo CD** (dal PC della scuola, in un altro terminale):
-```bash
-ssh -L 8081:localhost:8080 iot        # lascialo aperto
-# browser: https://localhost:8081   utente: admin   password: stampata da cluster_setup.sh
-# (o nella VM: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
-```
+**Interfaccia di Argo CD**: dal browser del PC della scuola apri **https://localhost:8080**
+(accetta il certificato self-signed). Utente `admin`, password stampata da `cluster_setup.sh`
+(o nella VM: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`).
+Funziona senza tunnel perché il port-forward ascolta su `0.0.0.0` e la VM inoltra la porta 8080 al PC.
 
 **Demo v1 → v2** (il push si fa **dal PC della scuola**: lì c'è la chiave GitHub di emptydeepblue):
 ```bash
@@ -201,6 +198,7 @@ Domande probabili:
 - **Perché `application.yaml`?** Configurazione dichiarativa (GitOps): anche la definizione dell'app sta nel repo; sync automatico con `prune` (rimuove ciò che non è più in Git) e `selfHeal` (annulla le modifiche manuali).
 - **Perché il repo `marboccu-iot`?** La subject vuole il login di un membro del gruppo nel nome del repo pubblico.
 - **Porta 8888?** Service NodePort 30420 → k3d mappa `8888:30420` sull'host.
+- **Come arriva l'interfaccia al PC?** `kubectl port-forward --address 0.0.0.0` nella VM + inoltro della porta 8080 della VM verso il PC.
 - **`--server-side` in kubectl apply?** Le CRD recenti di Argo CD superano il limite di dimensione dell'apply client-side.
 
 ---
@@ -213,6 +211,6 @@ Domande probabili:
 | goinfre svuotato (VM sparita) | `vm/scripts/create_vm.sh` + `setup_vm.sh` (sezione 0), ~10–15 min |
 | `vagrant up`: "domain already exists" | `vagrant destroy -f`, oppure `sudo virsh destroy marboccuS; sudo virsh undefine marboccuS --remove-all-storage` |
 | p2: curl non risponde subito | Traefik sta partendo: aspetta 30–60 s (`kubectl get pods -n kube-system`) |
-| Interfaccia Argo CD non raggiungibile | Il port-forward è morto. Nella VM: `nohup kubectl port-forward svc/argocd-server -n argocd 8080:443 >/dev/null 2>&1 &` |
+| Interfaccia Argo CD non raggiungibile | Il port-forward è morto. Nella VM: `nohup kubectl port-forward --address 0.0.0.0 svc/argocd-server -n argocd 8080:443 >/dev/null 2>&1 &` |
 | `argocd` CLI: "Unauthenticated" | `argocd login localhost:8080 --insecure --username admin --password <password>` |
 | Argo CD non vede v2 | `argocd app get wil-playground --refresh` o REFRESH nell'interfaccia |
