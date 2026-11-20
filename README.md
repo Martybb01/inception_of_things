@@ -124,6 +124,8 @@ curl http://<VM_IP>:8888
 - Rocky specifics in the inline provision: `dnf` instead of `apt`, `nmap-ncat` for `nc`, and `firewalld` is disabled
   (otherwise it blocks port 6443 and the agent never joins).
 - The token and kubeconfig are shared through `/vagrant` (NFS v4 synced folder, needed with libvirt).
+- Passwordless SSH: Vagrant replaces its public insecure key with a new key generated for each machine
+  (default `insert_key`), and password authentication is disabled. `vagrant ssh-config marboccuS` shows the key used.
 - Check: `vagrant ssh marboccuS -c "kubectl get nodes -o wide"` and `ip a show ens6` on both machines.
 
 **P2**

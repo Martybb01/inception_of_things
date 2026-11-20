@@ -2,7 +2,6 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 600
-  config.ssh.insert_key = false
 
   config.vm.box = "rockylinux/10"
   config.vm.box_url = "https://dl.rockylinux.org/pub/rocky/10/images/x86_64/Rocky-10-Vagrant-Libvirt.latest.x86_64.vagrant.libvirt.box"

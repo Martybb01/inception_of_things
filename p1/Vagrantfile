@@ -2,7 +2,6 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 600
-  config.ssh.insert_key = false
   config.vm.synced_folder ".", "/vagrant", type: "nfs", nfs_version: 4, nfs_udp: false
 
   config.vm.provision "shell", inline: <<-SHELL
